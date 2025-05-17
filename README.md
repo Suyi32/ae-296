@@ -43,7 +43,7 @@ We will provide an public IP. And you can logon the instance with the command ``
   
   ``python send_req_ae_test.py``
 
-- In the terminal that sends requests, you will see the total time costs of serving the requests.
+- In the terminal that sends requests, you will see the average request latency and the total time costs of serving the requests.
 - Press Ctrl + C to terminate the server.
 
 #### Load LoRA on demand. 
@@ -59,7 +59,7 @@ We will provide an public IP. And you can logon the instance with the command ``
   
   ``python send_req_ae_test.py``
 
-- In the terminal that sends requests, you will see the total time costs of serving the requests.
+- In the terminal that sends requests, you will see the average request latency and the total time costs of serving the requests.
 - Press Ctrl + C to terminate the server.
 
 #### CPU-assisted Computation. 
@@ -75,7 +75,7 @@ We will provide an public IP. And you can logon the instance with the command ``
 
   ``python send_req_ae_test.py``
 
-- In the terminal that sends requests, you will see the total time costs of serving the requests.
+- In the terminal that sends requests, you will see the average request latency and the total time costs of serving the requests.
 - Press Ctrl + C to terminate the server.
 
 #### Compare the results.
@@ -84,7 +84,7 @@ The expected results: the time costs of *CPU-assisted Computation* can rival tha
 That is: *Use cached LoRA* < *CPU-assisted Computation* < *Load LoRA on demand*.
 
 #### Parse the server logs.
-- Go to the directory ``./ae-296``. Using the below command to see the average prefilling time, decoding time and LoRA loading time on the console.
+- Go to the directory ``./ae-296``. Using the below command to see the average prefilling time, decoding time and LoRA loading time on the console. You can compare the results with Figure 15.
 
   ``python parse_server_log.py``
 
@@ -100,3 +100,50 @@ That is: *Use cached LoRA* < *CPU-assisted Computation* < *Load LoRA on demand*.
 
 - The results will be present the figure. You can compare the results with those in Figure 19.
   ``schduler_results_1.pdf`` and ``schduler_results_2.pdf``
+
+
+### Reproduce Fig.12 Left
+- Enter the folder ``cd /workspace/ae-296/fig12-left-popularity``
+
+- Run the command ``python plot_popularity.py`` to generate the plot named ``plot_popularity.pdf``.
+
+### Reproduce Fig.12 Right
+- Enter the folder ``cd /workspace/ae-296/fig12-right-shm-skt``
+
+#### Evaluate communication with socket
+
+  ``cd /workspace/ae-296/fig12-right-shm-skt/zmq``
+
+- run the test script with parameter 1 3 5, representing 1,3,5 clients respectively.
+
+  ``bash test.sh 1``
+
+  ``bash test.sh 3``
+
+  ``bash test.sh 5``
+
+#### Evaluate communication with shared memory
+
+``cd /workspace/ae-296/fig12-right-shm-skt/shm``
+
+- run the test script with parameter 1 3 5, representing 1,3,5 clients respectively.
+
+  ``bash test.sh 1``
+
+  ``bash test.sh 3``
+
+  ``bash test.sh 5``
+
+- There will be warnings on the console. Do not worry.
+
+#### Plot results
+
+- preprocess
+
+  ``python preprocess.py``
+
+- plot
+
+  ``python ipc.py``
+
+- The result will be saved to plot_shm.pdf

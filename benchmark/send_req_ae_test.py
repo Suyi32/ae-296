@@ -16,9 +16,15 @@ send_post_request()
 send_post_request()
 print("warmup done")
 
-start_time = time.time()
+req_times = []
+
 # send a small number of requests
-for i in range(10):
+for i in range(60):
+    start_time = time.time()
     send_post_request()
-end_time = time.time()
-print("time cost: ", end_time - start_time)
+    end_time = time.time()
+    req_times.append(end_time - start_time)
+
+print("Avg req time: ", sum(req_times)/len(req_times))
+
+print("Total time cost: ", sum(req_times))
