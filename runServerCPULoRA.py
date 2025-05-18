@@ -62,7 +62,7 @@ def create_model(logFolder, world_size, input_len, loras_num, lora_rank, model_d
     test_command = f"exec numactl --physcpubind={model_cpus} python -W ignore -m lightllm.server.api_server --host 127.0.0.1 --port 8080 "
     test_command += f"--model_dir {model_dir} --running_max_req_size 16 --max_req_input_len {input_len} --tp {world_size} --max_prefill_batch_size {max_prefill_batch_size} "
     test_command += f"--max_total_token_num 5000 --lora_num {loras_num} --lora_rank {lora_rank} --mode {mode} "
-    test_command += f"--token_per_lora {token_per_lora} --disable_log_stats --max_req_total_len 256 "
+    test_command += f"--token_per_lora {token_per_lora} --disable_log_stats --max_req_total_len 320 "
 
     test_log = os.path.join(logFolder, "launch_server.log")
     test_command += f"> {test_log} 2>&1"
@@ -140,10 +140,13 @@ def main():
 
     if mode == "aaas-cached":
         baseline_name = "cached_lora"
-    if mode == "aaas-gpu":
+    elif mode == "aaas-gpu":
         baseline_name = "ondmd_lora"
-    if mode == "aaas":
+    elif mode == "aaas" and "-token-" not in sys.argv[1]:
         baseline_name = "toppings_lora"
+    elif "-token-" in sys.argv[1]:
+        token_num = sys.argv[1].split("-token-")[1].split(".yml")[0]
+        baseline_name = "toppings-token-" + token_num
 
     logFolder = os.path.join(project_path, "logs", baseline_name)
 

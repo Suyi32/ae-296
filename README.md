@@ -147,3 +147,76 @@ That is: *Use cached LoRA* < *CPU-assisted Computation* < *Load LoRA on demand*.
   ``python ipc.py``
 
 - The result will be saved to plot_shm.pdf
+
+
+### Reproduce Fig.17 Left
+
+- In a terminal, go to the project directory ``cd /workspace/ae-296``
+
+- Evaluate for token 4. Spinup the server. The server needs some time (30~60s) to launch.
+
+  ``python3 runServerCPULoRA.py ./config/ali-a10-token-4.yml``
+
+- Please wait 30~60s for the server to be ready. You can check the server log in ``./logs/toppings-token-4/launch_server.log`` to see if the server is ready. The server is ready if you see ``INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)`` in the log file.
+- Open another terminal, enter the container, and change directory (cd) to the repo: ``cd ae-296``
+- Go to the benchmark directory and send a small number of requests
+
+  ``cd benchmark``
+  
+  ``python3 send_fixed_prompt.py --token_num 4``
+
+- Press Ctrl + C to terminate the server.
+
+
+- In a terminal, go to the project directory ``cd /workspace/ae-296``
+
+- Evaluate for token 16. Spinup the server. The server needs some time (30~60s) to launch.
+
+  ``python3 runServerCPULoRA.py ./config/ali-a10-token-16.yml``
+
+- Please wait 30~60s for the server to be ready. You can check the server log in ``./logs/toppings-token-16/launch_server.log`` to see if the server is ready. The server is ready if you see ``INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)`` in the log file.
+- Open another terminal, enter the container, and change directory (cd) to the repo: ``cd ae-296``
+- Go to the benchmark directory and send a small number of requests
+
+  ``cd benchmark``
+  
+  ``python3 send_fixed_prompt.py --token_num 16``
+
+- Press Ctrl + C to terminate the server.
+
+- In a terminal, go to the project directory ``cd /workspace/ae-296``
+
+- Evaluate for token 64. Spinup the server. The server needs some time (30~60s) to launch.
+
+  ``python3 runServerCPULoRA.py ./config/ali-a10-token-64.yml``
+
+- Please wait 30~60s for the server to be ready. You can check the server log in ``./logs/toppings-token-64/launch_server.log`` to see if the server is ready. The server is ready if you see ``INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)`` in the log file.
+- Open another terminal, enter the container, and change directory (cd) to the repo: ``cd ae-296``
+- Go to the benchmark directory and send a small number of requests
+
+  ``cd benchmark``
+  
+  ``python3 send_fixed_prompt.py --token_num 64``
+
+- Press Ctrl + C to terminate the server.
+
+
+- In a terminal, go to the project directory ``cd /workspace/ae-296``
+
+- Evaluate for token 256. Spinup the server. The server needs some time (30~60s) to launch.
+
+  ``python3 runServerCPULoRA.py ./config/ali-a10-token-256.yml``
+
+- Please wait 30~60s for the server to be ready. You can check the server log in ``./logs/toppings-token-256/launch_server.log`` to see if the server is ready. The server is ready if you see ``INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)`` in the log file.
+- Open another terminal, enter the container, and change directory (cd) to the repo: ``cd ae-296``
+- Go to the benchmark directory and send a small number of requests
+
+  ``cd benchmark``
+  
+  ``python3 send_fixed_prompt.py --token_num 255``
+
+- Press Ctrl + C to terminate the server.
+
+- Go to ``/workspace/ae-296/fig17``. Then run the following command. On the console, you will the see the LoRA computation time with different number of tokens.
+
+  ``python3 plot_left.py``
