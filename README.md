@@ -149,7 +149,7 @@ That is: *Use cached LoRA* < *CPU-assisted Computation* < *Load LoRA on demand*.
 - The result will be saved to plot_shm.pdf
 
 
-### Reproduce Fig.17 Left
+### Reproduce Fig.17
 
 - In a terminal, go to the project directory ``cd /workspace/ae-296``
 
@@ -217,6 +217,10 @@ That is: *Use cached LoRA* < *CPU-assisted Computation* < *Load LoRA on demand*.
 
 - Press Ctrl + C to terminate the server.
 
-- Go to ``/workspace/ae-296/fig17``. Then run the following command. On the console, you will the see the LoRA computation time with different number of tokens.
+- Go to ``/workspace/ae-296/fig17``. Then run the following command. On the console, you will the see the LoRA computation time with *different number of tokens*, which corresponds to Fig.17-Left.
 
   ``python3 plot_left.py``
+
+- Go to ``/workspace/ae-296/fig17``. Then run the following command. On the console, you will the see the LoRA computation time with *different parallelism degrees*, , which corresponds to Fig.17-Right.
+
+  ``python3 plot_right.py``
