@@ -7,6 +7,11 @@ We provide a docker container that have the environments installed.
 
 We will provide an public IP. And you can logon the instance with the command ``ssh ubuntu@<IP>``. The password is **atc2025ae**.
 
+- Clear the stopped container, if it exists
+
+  ``docker kill atc-ae``
+
+  ``docker rm atc-ae``
 
 - Run the container
 
@@ -84,7 +89,7 @@ The expected results: the time costs of *CPU-assisted Computation* can rival tha
 That is: *Use cached LoRA* < *CPU-assisted Computation* < *Load LoRA on demand*.
 
 #### Parse the server logs.
-- Go to the directory ``./ae-296``. Using the below command to see the average prefilling time, decoding time and LoRA loading time on the console. You can compare the results with Figure 15.
+- Go to the directory ``cd /workspace/ae-296``. Using the below command to see the average prefilling time, decoding time and LoRA loading time on the console. You can compare the results with Figure 15.
 
   ``python parse_server_log.py``
 
@@ -134,11 +139,12 @@ That is: *Use cached LoRA* < *CPU-assisted Computation* < *Load LoRA on demand*.
 
   ``bash test.sh 5``
 
-- There will be warnings on the console. Do not worry.
+- There will be warnings on the console. Do not worry. You will see ``all clients finished`` at the end.
 
 #### Plot results
 
 - preprocess
+  ``cd /workspace/ae-296/fig12-right-shm-skt``
 
   ``python preprocess.py``
 
@@ -217,10 +223,10 @@ That is: *Use cached LoRA* < *CPU-assisted Computation* < *Load LoRA on demand*.
 
 - Press Ctrl + C to terminate the server.
 
-- Go to ``/workspace/ae-296/fig17``. Then run the following command. On the console, you will the see the LoRA computation time with *different number of tokens*, which corresponds to Fig.17-Left.
+- Go to ``cd /workspace/ae-296/fig17``. Then run the following command. On the console, you will the see the LoRA computation time with *different number of tokens*, which corresponds to Fig.17-Left.
 
   ``python3 plot_left.py``
 
-- Go to ``/workspace/ae-296/fig17``. Then run the following command. On the console, you will the see the LoRA computation time with *different parallelism degrees*, , which corresponds to Fig.17-Right.
+- Go to ``cd /workspace/ae-296/fig17``. Then run the following command. On the console, you will the see the LoRA computation time with *different parallelism degrees*, , which corresponds to Fig.17-Right.
 
   ``python3 plot_right.py``

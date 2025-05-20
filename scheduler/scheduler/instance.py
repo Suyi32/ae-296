@@ -75,6 +75,21 @@ class ReqQueue(object):
     def __repr__(self):
         return str(self)
 
+    def migrate_to(self, other_inst):
+        # print(f"!!migrate: {sum([i.num_tokens_left for i in self.reqs])}, {sum([i.num_tokens_left for i in other_inst.reqs])}")
+        idxmap = []
+        for i, r in enumerate(self.reqs):
+            idxmap.append([r.num_tokens_left, i])
+        idxmap.sort(reverse=True)
+        nummove = (len(self.reqs) + len(other_inst.reqs)) // 2
+        mig_ids = [idxmap[i][1] for i in range(nummove)]
+        tmp_reqs = []
+        for i, r in enumerate(self.reqs):
+            if i not in mig_ids:
+                tmp_reqs.append(r)
+            else:
+                other_inst.reqs.append(r)
+        self.reqs = tmp_reqs
 
 class AaaSInstance(object):
     def __init__(self, model_name, lora_rank, max_batch_size, cost_model, cost_func, lora_type, method):
@@ -100,6 +115,9 @@ class AaaSInstance(object):
             for (first, total, len) in self.metric_buffer:
                 f.write(f"{first}, {total}, {len}\n")
         self.metric_buffer = []
+
+    def migrate_to(self, other_inst):
+        self.req_queue.migrate_to(other_inst.req_queue)
 
     def add_request(self, req: Req):
         self.req_queue.push(req)

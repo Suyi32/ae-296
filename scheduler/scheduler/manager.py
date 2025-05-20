@@ -112,16 +112,51 @@ class InstanceManager(object):
                 most_idle_id = inst_id
         return most_idle_id
     
+    #def dlora_assign(self, req: Req):
+    #    most_idle_val, most_idle_id = float("inf"), float("inf")
+    #    for (inst_id, rank) in self.mapping[req.model]:
+    #        inst = self.instances[inst_id]
+    #        run_ranks, queue_ranks, run_tokens, queue_tokens = inst.get_status()
+    #        all_tokens = run_tokens + queue_tokens
+    #        if all_tokens < most_idle_val:
+    #            most_idle_val = all_tokens
+    #            most_idle_id = inst_id
+    #    return most_idle_id
     def dlora_assign(self, req: Req):
-        most_idle_val, most_idle_id = float("inf"), float("inf")
-        for (inst_id, rank) in self.mapping[req.model]:
+        # find candidates
+        candidates = self.mapping[req.model]
+        p_list, d_list = [], []
+        full_list = []
+
+        for (inst_id, rank) in candidates:
             inst = self.instances[inst_id]
-            run_ranks, queue_ranks, run_tokens, queue_tokens = inst.get_status()
-            all_tokens = run_tokens + queue_tokens
-            if all_tokens < most_idle_val:
-                most_idle_val = all_tokens
-                most_idle_id = inst_id
-        return most_idle_id
+            run_ranks, queue_ranks, _, _ = inst.get_status()
+            already_on_machine = run_ranks + queue_ranks
+            all_ranks = already_on_machine
+            if len(all_ranks) > self.max_bsz:
+                full_list.append([len(all_ranks), inst_id])
+                continue
+            if len(queue_ranks) != 0:
+                p_list.append([len(all_ranks), inst_id])
+            else:
+                d_list.append([len(all_ranks), inst_id])
+        p_list.sort(key=lambda x: x[0])
+        d_list.sort(key=lambda x: x[0])
+        
+        if len(p_list) != 0:
+            return p_list[0][1]
+        
+        # migration
+        inst_with_qlen = []
+        for (inst_id, rank) in self.mapping[req.model]:
+            inst_queue = self.instances[inst_id].req_queue
+            sum_tokens = sum([r.num_tokens_left for r in inst_queue.reqs])
+            inst_with_qlen.append([sum_tokens, self.instances[inst_id]])
+        inst_with_qlen.sort(key=lambda i: i[0], reverse=True)
+        K = 10
+        for i in range(K):
+            inst_with_qlen[i][1].migrate_to(inst_with_qlen[-i][1])
+        return self.rand_assign(req)
 
     def first_fit_assign(self, req: Req):
         for (inst_id, rank) in self.mapping[req.model]:
