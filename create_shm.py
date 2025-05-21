@@ -65,7 +65,7 @@ if __name__ == "__main__":
         tensor_cp.register_pinned_memory(torch_shared_out_o.untyped_storage().data_ptr(), shared_out_o.nbytes)
 
         # create shared bytes for token length
-        shm_tkn_len = shared_memory.SharedMemory(create=True, size=1)
+        shm_tkn_len = shared_memory.SharedMemory(create=True, size=8)
         shared_tkn_len = shm_tkn_len.buf
         shared_tkn_len[0] = 1
         

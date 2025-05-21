@@ -89,7 +89,8 @@ class Lora_CPU():
         shm_tkn_len_filename = shm_name_files[0]
         shm_tkn_len_name = shm_tkn_len_filename[:-4].split("-")[1]
         self.shm_tkn_len = shared_memory.SharedMemory(name=shm_tkn_len_name)
-        self.shared_tkn_len = self.shm_tkn_len.buf
+        # self.shared_tkn_len = self.shm_tkn_len.buf
+        self.shared_tkn_len = np.ndarray((1,), dtype=np.int64, buffer=self.shm_tkn_len.buf)
 
         if self.gpu_id == 0:
             self.shared_tkn_len[0] = 1
